@@ -1,21 +1,23 @@
 const mysql = require('mysql2');
 const util = require('util');
-require('dotenv').config(); // تحميل متغيرات البيئة من ملف .env
+
+require('dotenv').config();
 
 let dbConfig;
 
 if (process.env.SCALINGO_MYSQL_URL) {
-  // تحليل SCALINGO_MYSQL_URL
   const dbUrl = new URL(process.env.SCALINGO_MYSQL_URL);
   dbConfig = {
     host: dbUrl.hostname,
     port: dbUrl.port,
     user: dbUrl.username,
     password: dbUrl.password,
-    database: dbUrl.pathname.replace('/', '')
+    database: dbUrl.pathname.replace('/', ''),
+    ssl: {
+      rejectUnauthorized: false // بسبب useSSL=true&verifyServerCertificate=false
+    }
   };
 } else {
-  // استخدام القيم من ملف .env (محلياً مثلاً)
   dbConfig = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -35,7 +37,6 @@ db.connect((err) => {
   console.log("✅ تم الاتصال بقاعدة البيانات بنجاح");
 });
 
-// دعم async/await باستخدام promisify
 db.query = util.promisify(db.query);
 
 module.exports = db;
