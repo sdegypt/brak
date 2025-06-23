@@ -1,0 +1,688 @@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="header" role="navigation" aria-label="شريط التنقل العلوي">
+  <nav id="colorNav">
+    <!-- Left-side icons (visually right in RTL): Settings and Notifications -->
+    <ul class="left-nav">
+      <% if (locals.userId) { %>
+        <li class="settings-dropdown">
+          <a href="#" class="nav-icon" aria-label="الإعدادات">
+            <i class="fas fa-cog"></i>
+           
+          </a>
+          <div class="dropdown-menu">
+            <a href="/change-password">
+              <i class="fas fa-key"></i>
+              تغيير كلمة المرور
+            </a>
+            <% if (locals.isAdmin) { %>
+              <a href="/admin/dashboard">
+                <i class="fas fa-user-shield"></i>
+                لوحة الإدارة
+              </a>
+            <% } %>
+            <button onclick="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+              تسجيل الخروج
+            </button>
+          </div>
+        </li>
+        <li>
+          <a href="/stores" class="nav-icon" aria-label="المتاجر">
+            <i class="fas fa-store"></i>
+            <span class="tooltip">المتاجر</span>
+          </a>
+        </li>
+        <li>
+          <a href="/notifications" class="nav-icon" aria-label="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="tooltip">الإشعارات</span>
+            <% if (locals.unreadCount > 0) { %>
+              <span class="notification-count"><%= locals.unreadCount %></span>
+            <% } %>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+    <!-- Right-side icons (visually left in RTL): Jobs, Projects, and others -->
+    <ul class="right-nav">
+      <li>
+        <a href="/jobs" class="nav-icon" aria-label="الوظائف">
+          <i class="fas fa-briefcase"></i>
+          <span class="tooltip">الوظائف</span>
+        </a>
+      </li>
+      <li>
+        <a href="/ProjectSpace" class="nav-icon" aria-label="المشاريع">
+          <i class="fas fa-cogs"></i>
+          <span class="tooltip">المشاريع</span>
+        </a>
+      </li>
+      <% if (locals.userId) { %>
+        <li>
+          <a href="/friends" class="nav-icon" aria-label="الأصدقاء">
+            <i class="fas fa-users"></i>
+            <span class="tooltip">الأصدقاء</span>
+          </a>
+        </li>
+        <li>
+          <a href="/profile" class="nav-icon" aria-label="الملف الشخصي">
+            <i class="fas fa-user"></i>
+            <span class="tooltip">الملف الشخصي</span>
+          </a>
+        </li>
+        <li>
+          <a href="/messages" class="nav-icon" aria-label="الرسائل">
+            <i class="fas fa-envelope"></i>
+            <span class="tooltip">الرسائل</span>
+            <% if (locals.unreadMessagesCount > 0) { %>
+              <span class="notification-count"><%= locals.unreadMessagesCount %></span>
+            <% } %>
+          </a>
+        </li>
+        <li>
+          <a href="/forum" class="nav-icon" aria-label="المنتدى">
+            <i class="fas fa-home"></i>
+            <span class="tooltip">المنتدى</span>
+          </a>
+        </li>
+      <% } else { %>
+        <li>
+          <a href="/login" class="login-button">
+            <i class="fas fa-sign-in-alt"></i>
+            تسجيل الدخول
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      direction: ltr;
+    }
+
+    :root {
+      --primary-color: #FF6B00; /* Orange */
+      --secondary-color: #FFA500; /* Light Orange */
+      --accent-color: #FF8533; /* Medium Orange */
+      --background-color: #ffffff;
+      --card-bg: #ffffff;
+      --text-color: #1a202c;
+      --muted-text: #4a5568;
+      --border-radius: 10px;
+      --transition: 0.2s ease;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --border-color: #e2e8f0;
+    }
+    body{
+      background-color: var(--background-color);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 62;
+   
+    }
+
+    #colorNav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .left-nav,
+    .right-nav {
+      display: flex;
+      list-style: none;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .left-nav {
+      gap: 1.5rem; /* Smaller gap for settings and notifications */
+    }
+
+    .right-nav {
+      gap: 1.8rem; /* Adjusted for jobs, projects, and other icons */
+    }
+
+    #colorNav > ul > li {
+      position: relative;
+    }
+
+    .nav-icon {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .nav-icon i {
+      font-size: 20px;
+      background: linear-gradient(45deg, #FF6B00);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .nav-icon:hover {
+      background: linear-gradient(45deg, #FF6B00, #FFA500);
+    }
+
+    .nav-icon:hover i {
+      -webkit-text-fill-color: white;
+    }
+
+    /* Tooltip Styles */
+    .tooltip {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #333 transparent;
+    }
+
+    .nav-icon:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+      bottom: -35px;
+    }
+
+    .notification-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: linear-gradient(45deg, #FF6B00, #FFA500);
+      color: white;
+      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      z-index: 2;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 8px 0;
+      min-width: 200px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .settings-dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu a, 
+    .dropdown-menu button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: right;
+      cursor: pointer;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu button:hover {
+      background: linear-gradient(45deg, #FF6B00, #FFA500);
+      color: white;
+    }
+
+    .dropdown-menu a:hover i,
+    .dropdown-menu button:hover i {
+      color: white;
+    }
+
+    .dropdown-menu i {
+      font-size: 16px;
+      color: #FF6B00;
+    }
+
+    .login-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: linear-gradient(45deg, #FF6B00, #FFA500);
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+    }
+
+    .login-button i {
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 0.5rem 1.8em;
+        height: 62px;
+      }
+      
+      .left-nav {
+        gap: 1.2rem;
+      }
+      
+      .right-nav {
+        gap: 1.5rem;
+      }
+      
+      .nav-icon {
+        width: 38px;
+        height: 38px;
+      }
+      
+      .nav-icon i {
+        font-size: 1.3rem;
+      }
+      
+      .dropdown-menu {
+        width: 240px;
+      }
+      
+      .notification-count {
+        min-width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+      }
+      
+      .login-button {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.95rem;
+      }
+
+      .tooltip {
+        font-size: 11px;
+        bottom: -28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .left-nav {
+        gap: 1rem;
+      }
+      
+      .right-nav {
+        gap: 1rem;
+      }
+      
+      .nav-icon {
+        width: 34px;
+        height: 34px;
+      }
+      
+      .nav-icon i {
+        font-size: 1.2rem;
+      }
+      
+      .dropdown-menu {
+        width: 220px;
+      }
+      
+      .notification-count {
+        min-width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+      }
+      
+      .login-button {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .tooltip {
+        font-size: 10px;
+        bottom: -25px;
+      }
+    }
+
+    /* Header Actions */
+    .actions-nav {
+      background: #ffffff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .actions-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .action-btn {
+      position: relative;
+      padding: 8px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn i {
+      font-size: 1.5rem;
+      background: -webkit-linear-gradient(45deg, #FF6B00, #FFA500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(45deg, #FF6B00, #FFA500);
+    }
+
+    .action-btn:hover i {
+      -webkit-text-fill-color: white;
+    }
+
+    .user-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid transparent;
+      background: linear-gradient(white, white) padding-box,
+                  linear-gradient(45deg, #FF6B00, #FFA500) border-box;
+      transition: transform 0.3s ease;
+    }
+
+    .user-avatar:hover {
+      transform: scale(1.1);
+    }
+
+    /* تحسين أنماط القائمة المنسدلة */
+    .settings-dropdown {
+      position: relative;
+    }
+
+    .settings-dropdown .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 8px 0;
+      min-width: 220px;
+      display: none;
+      z-index: 1000;
+      margin-top: 5px;
+      border: 1px solid var(--border-color);
+    }
+
+    .settings-dropdown:hover .dropdown-menu {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .dropdown-menu a,
+    .dropdown-menu button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: right;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .dropdown-menu a i,
+    .dropdown-menu button i {
+      font-size: 1.1rem;
+      color: var(--primary-color);
+      transition: color 0.3s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu button:hover {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .dropdown-menu a:hover i,
+    .dropdown-menu button:hover i {
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</div>
+
+<script>
+  const shouldConnectSocket = <%- locals.userId ? 'true' : 'false' %>;
+  let socket;
+  if (shouldConnectSocket) {
+      socket = io();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const userId = "<%= locals.userId || '' %>";
+
+    // Dynamically adjust dropdown alignment
+    const dropdownMenu = document.querySelector('#dropdown-menu');
+    if (dropdownMenu) {
+      const parentNav = dropdownMenu.closest('ul');
+      if (parentNav.classList.contains('left-nav')) {
+        dropdownMenu.style.left = '0';
+        dropdownMenu.style.right = 'auto';
+      } else if (parentNav.classList.contains('right-nav')) {
+        dropdownMenu.style.right = '0';
+        dropdownMenu.style.left = 'auto';
+      }
+    }
+
+    if (userId) {
+        const notificationsIcon = document.querySelector('.nav-icon[aria-label="الإشعارات"]');
+        const messagesIcon = document.querySelector('.nav-icon[aria-label="الرسائل"]');
+        const unreadNotificationsCount = document.querySelector('.notification-count[aria-label="الإشعارات"]');
+        const unreadMessagesCount = document.querySelector('.notification-count[aria-label="الرسائل"]');
+
+        fetch('/chat/unread-count', {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+        })
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+          })
+          .then(data => {
+            if (data.success && unreadMessagesCount) {
+              const initialCount = data.unreadMessagesCount || 0;
+              unreadMessagesCount.textContent = initialCount;
+              unreadMessagesCount.style.display = initialCount > 0 ? 'inline-block' : 'none';
+            }
+          })
+          .catch(error => { console.error('Error fetching unread message count:', error); });
+
+        if (socket) {
+            socket.on('newNotification', () => {
+                if (unreadNotificationsCount) {
+                    let currentCount = parseInt(unreadNotificationsCount.textContent) || 0;
+                    currentCount++;
+                    unreadNotificationsCount.textContent = currentCount;
+                    unreadNotificationsCount.style.display = 'inline-block';
+                    unreadNotificationsCount.classList.add('pulse');
+                    setTimeout(() => unreadNotificationsCount.classList.remove('pulse'), 1500);
+                }
+            });
+
+            socket.on('newMessage', (message) => {
+                if (message.receiver_id.toString() === userId.toString() && !message.is_read && unreadMessagesCount) {
+                    let currentCount = parseInt(unreadMessagesCount.textContent) || 0;
+                    currentCount++;
+                    unreadMessagesCount.textContent = currentCount;
+                    unreadMessagesCount.style.display = 'inline-block';
+                    unreadMessagesCount.classList.add('pulse');
+                    setTimeout(() => unreadMessagesCount.classList.remove('pulse'), 1500);
+                }
+            });
+        }
+
+        if (notificationsIcon) {
+            notificationsIcon.addEventListener('click', async (e) => {
+              e.preventDefault();
+              try {
+                const response = await fetch('/notifications/mark-all-as-read', {
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok && unreadNotificationsCount) {
+                  unreadNotificationsCount.textContent = '0';
+                  unreadNotificationsCount.style.display = 'none';
+                }
+              } catch (error) {
+                  console.error('Error marking notifications as read:', error);
+              } finally {
+                  window.location.href = '/notifications';
+              }
+            });
+        }
+
+        if (messagesIcon) {
+            messagesIcon.addEventListener('click', async (e) => {
+              e.preventDefault();
+              try {
+                const response = await fetch('/chat/mark-all-as-read', {
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok && unreadMessagesCount) {
+                  unreadMessagesCount.textContent = '0';
+                  unreadMessagesCount.style.display = 'none';
+                }
+              } catch (error) {
+                  console.error('Error marking messages as read:', error);
+              } finally {
+                  window.location.href = '/messages';
+              }
+            });
+        }
+
+        const logoutForm = document.querySelector('#logout-form');
+        if (logoutForm) {
+          logoutForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+              const response = await fetch('/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' }
+              });
+              if (response.ok) {
+                if(socket) socket.disconnect();
+                window.location.href = '/login';
+              } else {
+                  console.error('Logout failed:', response.statusText);
+              }
+            } catch (error) {
+                console.error('Error during logout:', error);
+            }
+          });
+        }
+    }
+  });
+
+  function logout() {
+    if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+      fetch('/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/login';
+        } else {
+          throw new Error('فشل تسجيل الخروج');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+            showNotification("حدث خطأ أثناء تسجيل الخروج", "error");
+      });
+    }
+  }
+</script>

@@ -1,0 +1,172 @@
+
+
+1-معالجة خطاء وتنبيه وشكل تنبيه 
+حدث خطأ: 404 Not Found  
+
+
+
+في صفحة 
+http://localhost:3000/chat/
+
+
+
+2-معالجة شكل وتصميم وموقع تنبيه لقد تم اضافة منشور بنجاح في صفحة
+http://localhost:3000/forum
+
+
+3-تحويل الوان تصميم صفحة الدردرشة الي تدرجات لون برتغالي بنفس نمط الموقع في صفحة 
+http://localhost:3000/chat/
+
+
+4-تحويل الالوان  تدرجات النفسجي في صفحة المنتدي الي تدرجات برتغالي بنفس نمط الموقع  
+صفحة http://localhost:3000/forum
+
+
+
+5-تصميم جميل احترافي  سلس متجاوب للصفحة تعديل المنشور 
+http://localhost:3000/forum/post/22/edit? مع اضافة 
+  <%- include('partials/headerhome') %>
+    <%- include('partials/headeraction') %>
+     و 
+     
+  <%- include('partials/footer') %>
+
+
+اصلح شكل تصميم والتجاوب بشكل جميل سلس في وضع الهاتف فقط للصفحة البروفايل لهذا القسم
+     <!-- Feedback message area -->
+            <div id="feedback-message-profile" class="feedback-message-container"></div>
+
+            <!-- الصف الأول: معلومات المستخدم -->
+            <div class="profile-header">
+                <div class="avatar-section">
+                    <img src="<%= avatarUrl %>"
+                         alt="Profile Picture"
+                         class="profile-picture"
+                         onerror="this.src='/uploads/images/pngwing.com.png'">
+                </div>
+                <div class="user-info">
+                    <h1 id="username"><%= user.name || "مستخدم" %></h1>
+                    <div class="stats">
+                        <div class="stat-item likes-stat">
+                            <i class="fas fa-heart"></i>
+                            <span id="like-count"><%= user.likes || 0 %></span>
+                            <span class="stat-label">إعجاب</span>
+                        </div>
+                        <div class="stat-item ranking-stat">
+                            <i class="fas fa-trophy"></i>
+                            <span id="ranking-count"><%= user.ranking || 0 %></span>
+                            <span class="stat-label">مستوى</span>
+                        </div>
+                        <div class="stat-item posts-stat">
+                            <a href="/forum/my-posts" class="share-link">
+                                <i class="fas fa-share-alt"></i>
+                                <span>مشاركات: <span id="share-count"><%= user.share || 0 %></span></span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- شريط التقدم للمستوى التالي -->
+                    <div class="ranking-progress">
+                        <div class="progress-info">
+                            <span class="current-level">المستوى <%= user.ranking || 0 %></span>
+                            <span class="next-level">المستوى <%= (user.ranking || 0) + 1 %></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="ranking-progress-fill"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="progress-points">جار الحساب...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <% if (typeof userId !== "undefined" && userId !== user.id) { %>
+                        <!-- Friend Action Button -->
+                        <button type="button" id="friend-action-button" 
+                                class="action-button friend-button" 
+                                data-friend-id="<%= user.id %>" 
+                                data-initial-status="<%= relationshipStatus || 'no_friend' %>">
+                            <span class="button-icon"><i class="fas fa-spinner fa-spin"></i></span>
+                            <span class="button-text">جار التحميل...</span>
+                        </button>
+
+                        <!-- Like Button -->
+                        <button type="button" id="likeButton" class="action-button like-button <%= user.liked ? 'liked' : '' %>" data-user-id="<%= user.id %>">
+                            <span class="button-icon"><i class="fas <%= user.liked ? 'fa-heart-crack' : 'fa-heart' %>"></i></span>
+                            <span class="button-text"><%= user.liked ? 'إلغاء الإعجاب' : 'إعجاب' %></span>
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+في صفحة 
+http://localhost:3000/profile
+
+
+
+
+6-تصميم جميل احترافي وزر احترافي مضبوط وضفحة متجاوبة مع زر بخلفية برتغالية تناسب نمط الموقع 
+للصفحة http://localhost:3000/updateProfile
+
+
+
+معالجة خطاء 
+JSON.parse: unexpected character at line 2 column 3 of the JSON data
+وازالة تضارب ال css للجعل الصفحة سريع سلسة بنفس التصميم مع ازالة اي شئ يوثر علي اداءة الصفحة صفحة الاشعارات 
+تاكد من اصلاح اي مشكلة فيها 
+http://localhost:3000/notifications
+
+
+
+
+7-ازالة tooltibe نص اسم الاعدادات من ايقونة cog 
+
+
+
+
+
+
+
+8-اصلاح منطق زر تسجيل الدخول
+http://localhost:3000/login
+
+
+
+
+
+9-اصلاح مشكلة حذف تصميم من معرض التصاميم في صفحة البروفايل 
+ حدث خطأ في الشبكة 
+ http://localhost:3000/profile
+
+
+
+
+ 10-اضف ال الكاش والكاش كنترول بشكل منطقي احترافي ذكي دون ان يوثر علي اداءة الموقع او عمل مشاكل 
+ يجب ان يحسن ذلك اداء الموقع 
+
+
+
+11-اظهار عدد اشعارات صفحة الرسائل والاشعارات بشكل صحيح منطقي في الايقونات بدون مشاكل 
+ب استخدام 
+fetch api ajax بدون اعادة تحميل الصفحة 
+
+
+
+
+12-جعل نص كلمة المتاجر  في صفحة المتاجر بلون عربي وكلمة عرض اسم المتجر كذلك 
+
+
+
+
+12-عرض الملف الشخصي للصاحب طلب انشاء متجر بشكل صحيح http://localhost:3000/profile/1  في صفحة
+لوحة تحكم الادمن 
+
+
+
+
+13-اضافة خاصية تعديل المنتج ميزة التعديل ستكون متاحة قريباً  في صفحة 
+http://localhost:3000/stores/2/dashboard
+
+
+14- في صفحة http://localhost:3000/forum  في اعلن عن نفسك يجب اضافة منطق مناسب لحذف الاعلان تلقائيأ بعد 24 ساعة 
+
+ارسل ملف الموقع كامل في صيغة zip

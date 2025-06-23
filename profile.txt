@@ -1,0 +1,991 @@
+في هذه الصفحة 
+http://localhost:3000/profile
+صفحة البروفايل 
+اريد ابقاء تصميم الحاسوب كما هو 
+لكن اريد تغيير شكل تصميم والتجاوب للشاشات للجوال 
+ليكون بشكل صحيح احترافي منسق جدآ منطقي اعد تصميم كامل @media 
+التجاوب للشاشات الجوال 
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <!-- العلامات الأساسية -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- تحسين SEO: وصف وعنوان ديناميكي -->
+    <meta name="description" content="الملف الشخصي لـ <%= user && user.name ? user.name : 'مستخدم' %> - عرض المعلومات الشخصية، معرض أعمال التصميم، والاقتباس الشخصي على اعملها براك." />
+    <meta name="keywords" content="<%= user && user.name ? user.name : 'مستخدم' %>, ملف شخصي, تصميم, اعملها براك, أعمال إبداعية" />
+    <meta name="author" content="<%= user && user.name ? user.name : 'مستخدم' %>" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <title>الملف الشخصي لـ <%= user && user.name ? user.name : 'مستخدم' %> | اعملها براك</title>
+
+    <!-- تحسين الأداء: تصحيح مسار CSS -->
+    <link rel="stylesheet" href="/css/profile.min.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+    <link rel="stylesheet" href="/css/messages-ui.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" media="screen" />
+
+    <!-- تحسين الأداء: تحميل مسبق للصورة الرئيسية -->
+    <% const avatarUrl = user && user.avatar && user.avatar.includes("/uploads/avatars/") ? user.avatar : `/uploads/avatars/${user && user.avatar ? user.avatar : "default-avatar.png"}`; %>
+    <link rel="preload" href="<%= avatarUrl %>" as="image" />
+
+    <!-- Open Graph لتحسين المشاركة على الشبكات الاجتماعية -->
+    <meta property="og:title" content="الملف الشخصي لـ <%= user && user.name ? user.name : 'مستخدم' %> | اعملها براك" />
+    <meta property="og:description" content="استعرض المعلومات الشخصية ومعرض أعمال <%= user && user.name ? user.name : 'مستخدم' %> على اعملها براك." />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://www.colorizer.com/profile/<%= user && user.id ? user.id : '' %>" />
+    <meta property="og:image" content="<%= avatarUrl %>" />
+    <meta property="og:image:alt" content="صورة الملف الشخصي لـ <%= user && user.name ? user.name : 'مستخدم' %>" />
+    <meta property="og:site_name" content="اعملها براك" />
+    <meta property="og:locale" content="ar_AR" />
+
+    <!-- Twitter Card لتحسين المشاركة على تويتر -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="الملف الشخصي لـ <%= user && user.name ? user.name : 'مستخدم' %> | اعملها براك" />
+    <meta name="twitter:description" content="استعرض المعلومات الشخصية ومعرض أعمال <%= user && user.name ? user.name : 'مستخدم' %> على اعملها براك." />
+    <meta name="twitter:image" content="<%= avatarUrl %>" />
+
+    <!-- تحسين الأداء: DNS Prefetch و Preconnect -->
+    <link rel="dns-prefetch" href="//www.colorizer.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+    <style>
+        /* أنماط الإشعارات */
+        .feedback-message-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+        }
+        
+        .alert-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: #343a40;
+        }
+        
+        .alert-info {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+        }
+        
+        .btn-close {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2em;
+            opacity: 0.7;
+            cursor: pointer;
+            float: left;
+            margin-left: 10px;
+        }
+        
+        .btn-close:hover {
+            opacity: 1;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <% if (!user || !user.id) { %>
+        <p>خطأ: المستخدم غير موجود</p>
+    <% } else { %>
+        <%- include("partials/headerhome") %>
+        <%- include("partials/headeraction") %>
+
+        <main class="main">
+            <!-- Feedback message area -->
+            <div id="feedback-message-profile" class="feedback-message-container"></div>
+
+            <!-- الصف الأول: معلومات المستخدم -->
+            <div class="profile-header">
+                <div class="avatar-section">
+                    <img src="<%= avatarUrl %>"
+                         alt="Profile Picture"
+                         class="profile-picture"
+                         onerror="this.src='/uploads/images/pngwing.com.png'">
+                </div>
+                <div class="user-info">
+                    <h1 id="username"><%= user.name || "مستخدم" %></h1>
+                    <div class="stats">
+                        <div class="stat-item likes-stat">
+                            <i class="fas fa-heart"></i>
+                            <span id="like-count"><%= user.likes || 0 %></span>
+                            <span class="stat-label">إعجاب</span>
+                        </div>
+                        <div class="stat-item ranking-stat">
+                            <i class="fas fa-trophy"></i>
+                            <span id="ranking-count"><%= user.ranking || 0 %></span>
+                            <span class="stat-label">مستوى</span>
+                        </div>
+                        <div class="stat-item posts-stat">
+                            <a href="/forum/my-posts" class="share-link">
+                                <i class="fas fa-share-alt"></i>
+                                <span>مشاركات: <span id="share-count"><%= user.share || 0 %></span></span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- شريط التقدم للمستوى التالي -->
+                    <div class="ranking-progress">
+                        <div class="progress-info">
+                            <span class="current-level">المستوى <%= user.ranking || 0 %></span>
+                            <span class="next-level">المستوى <%= (user.ranking || 0) + 1 %></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="ranking-progress-fill"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="progress-points">جار الحساب...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <% if (typeof userId !== "undefined" && userId !== user.id) { %>
+                        <!-- Friend Action Button -->
+                        <button type="button" id="friend-action-button" 
+                                class="action-button friend-button" 
+                                data-friend-id="<%= user.id %>" 
+                                data-initial-status="<%= relationshipStatus || 'no_friend' %>">
+                            <span class="button-icon"><i class="fas fa-spinner fa-spin"></i></span>
+                            <span class="button-text">جار التحميل...</span>
+                        </button>
+
+                        <!-- Like Button -->
+                        <button type="button" id="likeButton" class="action-button like-button <%= user.liked ? 'liked' : '' %>" data-user-id="<%= user.id %>">
+                            <span class="button-icon"><i class="fas <%= user.liked ? 'fa-heart-crack' : 'fa-heart' %>"></i></span>
+                            <span class="button-text"><%= user.liked ? 'إلغاء الإعجاب' : 'إعجاب' %></span>
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- الصف الثاني: المعلومات الشخصية -->
+            <div class="profile-details">
+                <div class="details-section">
+                    <h2>المعلومات الشخصية</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">:العمر</span>
+                            <span class="info-value" id="age"><%= user.age || '-' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">:الجنس</span>
+                            <span class="info-value" id="gender"><%= user.gender || '-' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">:البلد</span>
+                            <span class="info-value" id="country"><%= user.country || '-' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">:اللغة</span>
+                            <span class="info-value" id="language"><%= user.language || '-' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">:المهنة</span>
+                            <span class="info-value" id="skills"><%= user.occupation || '-' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">البريد :</span>
+                            <span class="info-value" id="email"><%= user.email || '-' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">الهاتف :</span>
+                            <span class="info-value" id="phone"><%= user.phone || '-' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">الملف الشخصي :</span>
+                            <% if (user.portfolio) { %>
+                                <a href="<%= user.portfolio %>" class="info-value" target="_blank" rel="noopener noreferrer">زيارة</a>
+                            <% } else { %>
+                                <span class="info-value">-</span>
+                            <% } %>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">تاريخ الانضمام :</span>
+                            <span class="info-value"><%= user.join_date ? new Date(user.join_date).toISOString().split('T')[0] : '-' %></span>
+                        </div>
+                    </div>
+                </div>
+                <% if (typeof userId !== 'undefined' && userId === user.id) { %>
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <a href="/updateProfile" id="edit-profile-button" class="edit-profile-button">
+                            <i class="fas fa-edit"></i> تعديل المعلومات
+                        </a>
+                        <button id="request-store-button" class="edit-profile-button" style="background: linear-gradient(45deg, #28a745, #20c997); border: none; cursor: pointer;">
+                            <i class="fas fa-store"></i> طلب إنشاء متجر
+                        </button>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- معرض أعمال التصميم -->
+            <div class="design-gallery-section">
+                <h2 class="section-title">معرض أعمال التصميم</h2>
+                <div class="general-container" id="design-gallery">
+                    <% if (Array.isArray(gallery) && gallery.length > 0) { %>
+                        <% gallery.forEach((item, index) => { %>
+                            <% if (item && item.image && item.id) { %>
+                                <input class="radio" type="radio" name="gallery-card" id="card<%= index %>" <%= index === 0 ? 'checked' : '' %> />
+                                <label class="content" for="card<%= index %>" style="background-image: url('/Uploads/designs/<%= item.image %>');">
+                                    <h3 class="title-card">
+                                        <span class="marg-bott"><%= item.title || 'عنوان افتراضي' %></span>
+                                        <span class="subtitle"><%= item.subtitle || '' %></span>
+                                    </h3>
+                                    <% if (typeof userId !== 'undefined' && userId === user.id) { %>
+                                        <form class="delete-form" data-design-id="<%= item.id %>">
+                                            <button type="button" class="delete-btn design-delete-btn" aria-label="حذف العمل">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    <% } %>
+                                </label>
+                            <% } %>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="no-items-message">لا توجد أعمال تصميم بعد.</p>
+                    <% } %>
+                </div>
+                <% if (typeof userId !== 'undefined' && userId === user.id) { %>
+                    <div class="add-design-container">
+                        <button id="add-design-btn" class="add-design-btn"><i class="fas fa-plus"></i> إضافة عمل تصميم</button>
+                        <form id="add-design-form" style="display: none;" enctype="multipart/form-data">
+                            <input type="file" name="image" accept="image/*" required>
+                            <input type="text" name="title" placeholder="عنوان العمل" required>
+                            <input type="text" name="subtitle" placeholder="عنوان فرعي (اختياري)">
+                            <button type="submit" class="share-btn">إضافة</button>
+                            <button type="button" id="cancel-design-btn" class="cancel-btn">إلغاء</button>
+                        </form>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- الصف الثالث: الاقتباس -->
+            <div class="quote-section">
+                <div class="quote-container">
+                    <i class="fas fa-quote-right quote-icon"></i>
+                    <textarea id="quote-editor" readonly placeholder="أضف اقتباسًا هنا..."><%= user.quote || '' %></textarea>
+                    <% if (typeof userId !== 'undefined' && userId === user.id) { %>
+                        <button id="edit-quote-button" class="edit-quote-button" aria-label="تعديل الاقتباس">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button id="save-quote-button" class="save-quote-button" style="display: none" aria-label="حفظ الاقتباس">
+                            <i class="fas fa-save"></i>
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+
+            <% if (typeof stores !== 'undefined' && stores.length > 0) { %>
+                <div class="my-stores-section" style="margin: 30px 0;">
+                    <h2 style="font-size:1.3rem; margin-bottom: 15px;"><i class="fas fa-store"></i> متاجري</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <% stores.forEach(function(store) { if(store.status === 'approved') { %>
+                            <div class="store-card" style="background:#fff; border-radius:10px; box-shadow:0 2px 8px #eee; padding:20px; min-width:220px;">
+                                <h3 style="margin-bottom:10px;"><%= store.name %></h3>
+                                <p style="color:#666; font-size:0.95rem; margin-bottom:10px;"><%= store.description %></p>
+                                <a href="/stores/<%= store.id %>/dashboard" class="btn btn-primary" style="display:inline-block; margin-top:10px; background:#667eea; color:#fff; padding:8px 18px; border-radius:6px; text-decoration:none; font-weight:600;">
+                                    <i class="fas fa-cogs"></i> إدارة المتجر
+                                </a>
+                            </div>
+                        <% } }); %>
+                    </div>
+                </div>
+            <% } %>
+        </main>
+
+        <%- include("partials/footer") %>
+    <% } %>
+
+    <script>
+        // وظيفة لعرض رسائل الملاحظات في صفحة الملف الشخصي
+        function displayProfileFeedback(message, type = "success") {
+            showNotification(message, type);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentUserId = "<%= typeof userId !== 'undefined' ? userId : null %>";
+            const profileUserId = "<%= user && user.id ? user.id : '' %>";
+            const friendActionButton = document.getElementById("friend-action-button");
+            const likeButton = document.getElementById("likeButton");
+
+            // وظيفة لتحميل وعرض بيانات التقييم
+            async function loadRankingDetails() {
+                try {
+                    const response = await fetch(`/profile/ranking-details?userId=${profileUserId}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // تحديث شريط التقدم
+                        const progressFill = document.getElementById('ranking-progress-fill');
+                        const progressPoints = document.getElementById('progress-points');
+                        
+                        if (progressFill && progressPoints) {
+                            progressFill.style.width = `${data.progressPercentage}%`;
+                            progressPoints.textContent = `${data.pointsToNextLevel} نقطة للمستوى التالي`;
+                        }
+                        
+                        // إضافة tooltip للإحصائيات
+                        const rankingStat = document.querySelector('.ranking-stat');
+                        if (rankingStat) {
+                            rankingStat.classList.add('ranking-tooltip');
+                            rankingStat.setAttribute('data-tooltip', `المجموع: ${data.totalPoints} نقطة`);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading ranking details:', error);
+                    const progressPoints = document.getElementById('progress-points');
+                    if (progressPoints) {
+                        progressPoints.textContent = 'خطأ في تحميل البيانات';
+                    }
+                }
+            }
+
+            // تحميل بيانات التقييم عند تحميل الصفحة
+            loadRankingDetails();
+
+            // وظيفة لعرض رسائل الملاحظات
+            function showNotification(message, type = "success") {
+                const container = document.getElementById('feedback-message-profile');
+                
+                // إزالة أي تنبيهات سابقة
+                container.innerHTML = '';
+                
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type}`;
+                notification.innerHTML = `
+                    <span class="notification-message">${message}</span>
+                    <button type="button" class="btn-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                container.appendChild(notification);
+                
+                // إخفاء الإشعار تلقائياً بعد 5 ثوانٍ
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.style.animation = 'slideOut 0.3s ease-out';
+                        setTimeout(() => {
+                            if (notification.parentElement) {
+                                notification.remove();
+                            }
+                        }, 300);
+                    }
+                }, 5000);
+            }
+
+            // وظيفة لتحديث مظهر زر الصداقة
+            function updateFriendButton(status) {
+                if (!friendActionButton) return;
+                
+                console.log('تحديث زر الصداقة إلى الحالة:', status);
+
+                const icon = friendActionButton.querySelector(".button-icon i");
+                const text = friendActionButton.querySelector(".button-text");
+                friendActionButton.classList.remove("status-no_friend", "status-pending_sent", "status-pending_received", "status-accepted");
+
+                switch (status) {
+                    case "no_friend":
+                        icon.className = "fas fa-user-plus";
+                        text.textContent = "إضافة صديق";
+                        friendActionButton.classList.add("status-no_friend");
+                        friendActionButton.dataset.action = "send_request";
+                        break;
+                    case "pending_sent":
+                        icon.className = "fas fa-user-clock";
+                        text.textContent = "إلغاء الطلب";
+                        friendActionButton.classList.add("status-pending_sent");
+                        friendActionButton.dataset.action = "cancel_request";
+                        break;
+                    case "pending_received":
+                        icon.className = "fas fa-user-check";
+                        text.textContent = "قبول الطلب";
+                        friendActionButton.classList.add("status-pending_received");
+                        friendActionButton.dataset.action = "accept_request";
+                        break;
+                    case "accepted":
+                        icon.className = "fas fa-user-minus";
+                        text.textContent = "إزالة صديق";
+                        friendActionButton.classList.add("status-accepted");
+                        friendActionButton.dataset.action = "remove_friend";
+                        break;
+                    default:
+                        console.log('حالة غير متوقعة:', status, 'استخدام الحالة الافتراضية');
+                        icon.className = "fas fa-user-plus";
+                        text.textContent = "إضافة صديق";
+                        friendActionButton.classList.add("status-no_friend");
+                        friendActionButton.dataset.action = "send_request";
+                        break;
+                }
+                
+                console.log('تم تحديث الزر بنجاح، الحالة الجديدة:', status);
+            }
+
+            // وظيفة لمعالجة إجراءات الصداقة
+            async function handleFriendAction(action) {
+                try {
+                    friendActionButton.disabled = true;
+                    const icon = friendActionButton.querySelector(".button-icon i");
+                    const text = friendActionButton.querySelector(".button-text");
+                    const originalIcon = icon.className;
+                    const originalText = text.textContent;
+
+                    icon.className = "fas fa-spinner fa-spin";
+                    text.textContent = "جارٍ التنفيذ...";
+
+                    let endpoint, body;
+                    
+                    switch(action) {
+                        case "send_request":
+                            endpoint = "/friends/send-request";
+                            body = JSON.stringify({ friendId: parseInt(profileUserId) });
+                            break;
+                        case "cancel_request":
+                            endpoint = "/friends/cancel-request";
+                            body = JSON.stringify({ friendId: parseInt(profileUserId) });
+                            break;
+                        case "accept_request":
+                            // البحث عن طلب الصداقة أولاً
+                            try {
+                                const requestsResponse = await fetch("/friends/status/" + profileUserId);
+                                const statusData = await requestsResponse.json();
+                                if (statusData.status === 'request_received') {
+                                    // البحث عن طلب الصداقة في قاعدة البيانات
+                                    const allRequestsResponse = await fetch("/friends");
+                                    const allRequestsData = await allRequestsResponse.text();
+                                    // استخراج request ID من الصفحة
+                                    const requestMatch = allRequestsData.match(/data-request-id="(\d+)"/);
+                                    if (requestMatch) {
+                                        const requestId = requestMatch[1];
+                                        endpoint = "/friends/accept-request";
+                                        body = JSON.stringify({ requestId: parseInt(requestId) });
+                                    } else {
+                                        showNotification("طلب الصداقة غير موجود", "error");
+                                        return;
+                                    }
+                                } else {
+                                    showNotification("لا يوجد طلب صداقة لقبوله", "error");
+                                    return;
+                                }
+                            } catch (error) {
+                                showNotification("خطأ في البحث عن طلب الصداقة", "error");
+                                return;
+                            }
+                            break;
+                        case "remove_friend":
+                            endpoint = "/friends/remove-friend";
+                            body = JSON.stringify({ friendId: parseInt(profileUserId) });
+                            break;
+                        default:
+                            showNotification("إجراء غير صالح", "error");
+                            return;
+                    }
+
+                    const response = await fetch(endpoint, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: body
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showNotification(result.message, "success");
+                        
+                        // تحديث حالة الزر بناءً على الإجراء
+                        let newStatus;
+                        switch(action) {
+                            case "send_request":
+                                newStatus = "pending_sent";
+                                break;
+                            case "cancel_request":
+                            case "remove_friend":
+                                newStatus = "no_friend";
+                                break;
+                            case "accept_request":
+                                newStatus = "accepted";
+                                break;
+                            default:
+                                newStatus = "no_friend";
+                        }
+                        
+                        updateFriendButton(newStatus);
+                        
+                        // تحديث عداد الإعجابات إذا كان موجوداً
+                        if (result.likes !== undefined) {
+                            document.getElementById("like-count").textContent = result.likes;
+                        }
+                        if (result.ranking !== undefined) {
+                            document.getElementById("ranking-count").textContent = result.ranking;
+                        }
+                    } else {
+                        showNotification(result.message, "error");
+                        // إعادة الزر إلى حالته السابقة
+                        icon.className = originalIcon;
+                        text.textContent = originalText;
+                    }
+                } catch (error) {
+                    console.error("خطأ في معالجة الإجراء:", error);
+                    showNotification("حدث خطأ أثناء معالجة الطلب", "error");
+                } finally {
+                    friendActionButton.disabled = false;
+                }
+            }
+
+            // إضافة مستمع الأحداث لزر الصداقة
+            if (friendActionButton) {
+                // تعيين الحالة الأولية مع قيمة افتراضية
+                const initialStatus = "<%= relationshipStatus || 'no_friend' %>";
+                console.log('الحالة الأولية للزر:', initialStatus);
+                updateFriendButton(initialStatus);
+
+                friendActionButton.addEventListener("click", async () => {
+                    const action = friendActionButton.dataset.action;
+                    if (!action) return;
+
+                    // التأكيد قبل بعض الإجراءات
+                    if (action === "remove_friend") {
+                        if (!confirm("هل أنت متأكد من إزالة هذا الصديق؟")) return;
+                    } else if (action === "cancel_request") {
+                        if (!confirm("هل أنت متأكد من إلغاء طلب الصداقة؟")) return;
+                    }
+
+                    await handleFriendAction(action);
+                });
+            }
+
+            // --- منطق زر الإعجاب ---
+            if (likeButton) {
+                likeButton.addEventListener("click", async function() {
+                    try {
+                        this.disabled = true;
+                        const icon = this.querySelector(".button-icon i");
+                        const text = this.querySelector(".button-text");
+                        const originalIcon = icon.className;
+                        const originalText = text.textContent;
+
+                        icon.className = "fas fa-spinner fa-spin";
+                        text.textContent = "جارٍ التنفيذ...";
+
+                        const response = await fetch("/profile/like", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ friendId: profileUserId })
+                        });
+
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            document.getElementById("like-count").textContent = result.likes;
+                            document.getElementById("ranking-count").textContent = result.ranking;
+                            
+                            this.classList.toggle("liked", result.liked);
+                            icon.className = `fas ${result.liked ? "fa-heart-crack" : "fa-heart"}`;
+                            text.textContent = result.liked ? "إلغاء الإعجاب" : "إعجاب";
+                            
+                            // إعادة تحميل بيانات التقييم لتحديث شريط التقدم
+                            loadRankingDetails();
+                        } else {
+                            showNotification(result.message, "error");
+                            icon.className = originalIcon;
+                            text.textContent = originalText;
+                        }
+                    } catch (error) {
+                        showNotification("حدث خطأ أثناء معالجة الإعجاب", "error");
+                    } finally {
+                        this.disabled = false;
+                    }
+                });
+            }
+
+            // --- منطق تحرير الاقتباس ---
+            const editQuoteButton = document.getElementById('edit-quote-button');
+            const saveQuoteButton = document.getElementById('save-quote-button');
+            const quoteEditor = document.getElementById('quote-editor');
+
+            if (editQuoteButton && saveQuoteButton && quoteEditor) {
+                editQuoteButton.addEventListener('click', function() {
+                    quoteEditor.readOnly = false;
+                    quoteEditor.focus();
+                    editQuoteButton.style.display = 'none';
+                    saveQuoteButton.style.display = 'inline-block';
+                    quoteEditor.style.border = '2px solid #667eea';
+                });
+
+                saveQuoteButton.addEventListener('click', async function() {
+                    try {
+                        const newQuote = quoteEditor.value.trim();
+                        
+                        const response = await fetch('/profile/update-quote', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ quote: newQuote })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            quoteEditor.readOnly = true;
+                            editQuoteButton.style.display = 'inline-block';
+                            saveQuoteButton.style.display = 'none';
+                            quoteEditor.style.border = 'none';
+                            showNotification('تم تحديث الاقتباس بنجاح', 'success');
+                        } else {
+                            showNotification(result.message || 'حدث خطأ أثناء تحديث الاقتباس', 'error');
+                        }
+                    } catch (error) {
+                        showNotification('حدث خطأ في الشبكة', 'error');
+                    }
+                });
+
+                // إلغاء التحرير عند الضغط على Escape
+                quoteEditor.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        quoteEditor.readOnly = true;
+                        editQuoteButton.style.display = 'inline-block';
+                        saveQuoteButton.style.display = 'none';
+                        quoteEditor.style.border = 'none';
+                        // استعادة النص الأصلي
+                        quoteEditor.value = '<%= user.quote || '' %>';
+                    }
+                });
+            }
+
+            // --- منطق حذف صور المعرض ---
+            const deleteButtons = document.querySelectorAll('.design-delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (!confirm('هل أنت متأكد من حذف هذا العمل؟')) {
+                        return;
+                    }
+
+                    const form = this.closest('.delete-form');
+                    const designId = form.dataset.designId;
+                    const designCard = this.closest('.content');
+                    const cardLabel = designCard.getAttribute('for');
+                    const radioInput = document.querySelector(`input#${cardLabel}`);
+                    
+                    // إضافة حالة التحميل
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    this.disabled = true;
+                    
+                    try {
+                        const response = await fetch('/profile/delete-design', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ designId: designId })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // إزالة العنصر من الصفحة مع تأثير بصري
+                            designCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                            designCard.style.opacity = '0';
+                            designCard.style.transform = 'scale(0.8)';
+                            
+                            setTimeout(() => {
+                                if (designCard) designCard.remove();
+                                if (radioInput) radioInput.remove();
+                                
+                                // إعادة ترقيم البطاقات المتبقية
+                                const remainingCards = document.querySelectorAll('.content');
+                                const remainingRadios = document.querySelectorAll('input[name="gallery-card"]');
+                                
+                                remainingCards.forEach((card, index) => {
+                                    const newId = `card${index}`;
+                                    card.setAttribute('for', newId);
+                                    if (remainingRadios[index]) {
+                                        remainingRadios[index].id = newId;
+                                        if (index === 0) {
+                                            remainingRadios[index].checked = true;
+                                        }
+                                    }
+                                });
+                                
+                                // إظهار رسالة إذا لم تعد هناك أعمال
+                                if (remainingCards.length === 0) {
+                                    const galleryContainer = document.getElementById('design-gallery');
+                                    galleryContainer.innerHTML = '<p class="no-designs">لا توجد أعمال تصميم لعرضها</p>';
+                                }
+                            }, 300);
+                            
+                            showNotification('تم حذف العمل بنجاح', 'success');
+                        } else {
+                            showNotification(result.message || 'حدث خطأ أثناء حذف العمل', 'error');
+                            // إعادة تعيين الزر
+                            this.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                            this.disabled = false;
+                        }
+                    } catch (error) {
+                        console.error('Error deleting design:', error);
+                        showNotification('حدث خطأ في الشبكة', 'error');
+                        // إعادة تعيين الزر
+                        this.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                        this.disabled = false;
+                    }
+                });
+            });
+
+            // --- منطق إضافة عمل تصميم ---
+            const addDesignBtn = document.getElementById('add-design-btn');
+            const addDesignForm = document.getElementById('add-design-form');
+            const cancelDesignBtn = document.getElementById('cancel-design-btn');
+
+            if (addDesignBtn && addDesignForm && cancelDesignBtn) {
+                addDesignBtn.addEventListener('click', function() {
+                    addDesignForm.style.display = 'block';
+                    addDesignBtn.style.display = 'none';
+                });
+
+                cancelDesignBtn.addEventListener('click', function() {
+                    addDesignForm.style.display = 'none';
+                    addDesignBtn.style.display = 'block';
+                    addDesignForm.reset();
+                });
+
+                addDesignForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    const originalText = submitButton.textContent;
+                    
+                    submitButton.textContent = 'جارٍ الإضافة...';
+                    submitButton.disabled = true;
+                    
+                    try {
+                        const response = await fetch('/profile/add-design', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            showNotification('تم إضافة العمل بنجاح', 'success');
+                            location.reload(); // إعادة تحميل الصفحة لعرض العمل الجديد
+                        } else {
+                            showNotification(result.message || 'حدث خطأ أثناء إضافة العمل', 'error');
+                            submitButton.textContent = originalText;
+                            submitButton.disabled = false;
+                        }
+                    } catch (error) {
+                        showNotification('حدث خطأ في الشبكة', 'error');
+                        submitButton.textContent = originalText;
+                        submitButton.disabled = false;
+                    }
+                });
+            }
+
+            // --- منطق زر طلب إنشاء متجر ---
+            const requestStoreButton = document.getElementById('request-store-button');
+            if (requestStoreButton) {
+                requestStoreButton.addEventListener('click', function() {
+                    // إنشاء modal لطلب المتجر
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.8);
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px;
+                    `;
+                    
+                    modal.innerHTML = `
+                        <div style="
+                            background: white;
+                            border-radius: 15px;
+                            padding: 30px;
+                            max-width: 500px;
+                            width: 100%;
+                            position: relative;
+                        ">
+                            <button onclick="this.closest('div').parentElement.remove(); document.body.style.overflow = 'auto';" style="
+                                position: absolute;
+                                top: 15px;
+                                right: 20px;
+                                background: none;
+                                border: none;
+                                font-size: 1.5rem;
+                                cursor: pointer;
+                                color: #666;
+                            ">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            
+                            <h2 style="margin-bottom: 20px; color: #333; text-align: center;">
+                                <i class="fas fa-store"></i>
+                                طلب إنشاء متجر
+                            </h2>
+                            
+                            <form id="store-request-form">
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                        اسم المتجر
+                                    </label>
+                                    <input type="text" name="storeName" required style="
+                                        width: 100%;
+                                        padding: 12px;
+                                        border: 2px solid #e9ecef;
+                                        border-radius: 8px;
+                                        font-size: 1rem;
+                                    " placeholder="أدخل اسم متجرك">
+                                </div>
+                                
+                                <div style="margin-bottom: 25px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                        وصف المتجر
+                                    </label>
+                                    <textarea name="storeDescription" required rows="4" style="
+                                        width: 100%;
+                                        padding: 12px;
+                                        border: 2px solid #e9ecef;
+                                        border-radius: 8px;
+                                        font-size: 1rem;
+                                        resize: vertical;
+                                    " placeholder="اكتب وصفاً مختصراً عن متجرك ونوع المنتجات التي ستبيعها"></textarea>
+                                </div>
+                                
+                                <div style="display: flex; gap: 15px;">
+                                    <button type="submit" style="
+                                        flex: 1;
+                                        padding: 12px;
+                                        background: linear-gradient(45deg, #28a745, #20c997);
+                                        color: white;
+                                        border: none;
+                                        border-radius: 8px;
+                                        font-weight: 600;
+                                        cursor: pointer;
+                                        transition: all 0.3s ease;
+                                    ">
+                                        <i class="fas fa-paper-plane"></i>
+                                        إرسال الطلب
+                                    </button>
+                                    <button type="button" onclick="this.closest('div').parentElement.remove(); document.body.style.overflow = 'auto';" style="
+                                        flex: 1;
+                                        padding: 12px;
+                                        background: #6c757d;
+                                        color: white;
+                                        border: none;
+                                        border-radius: 8px;
+                                        font-weight: 600;
+                                        cursor: pointer;
+                                    ">
+                                        إلغاء
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    document.body.style.overflow = 'hidden';
+                    
+                    // معالجة إرسال النموذج
+                    document.getElementById('store-request-form').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        
+                        const formData = new FormData(this);
+                        const submitButton = this.querySelector('button[type="submit"]');
+                        const originalText = submitButton.innerHTML;
+                        
+                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ الإرسال...';
+                        submitButton.disabled = true;
+                        
+                        try {
+                            const response = await fetch('/stores/request', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    storeName: formData.get('storeName'),
+                                    storeDescription: formData.get('storeDescription')
+                                })
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (result.success) {
+                                modal.remove();
+                                document.body.style.overflow = 'auto';
+                                showNotification('تم إرسال طلب إنشاء المتجر بنجاح! سيتم مراجعته من قبل الإدارة.', 'success');
+                                
+                                // تعطيل الزر بعد الإرسال
+                                requestStoreButton.disabled = true;
+                                requestStoreButton.innerHTML = '<i class="fas fa-clock"></i> تم إرسال الطلب';
+                                requestStoreButton.style.background = '#6c757d';
+                            } else {
+                                showNotification(result.message || 'حدث خطأ أثناء إرسال الطلب', 'error');
+                                submitButton.innerHTML = originalText;
+                                submitButton.disabled = false;
+                            }
+                        } catch (error) {
+                            showNotification('حدث خطأ في الشبكة', 'error');
+                            submitButton.innerHTML = originalText;
+                            submitButton.disabled = false;
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

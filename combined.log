@@ -1,0 +1,178 @@
+2025-06-20 16:31:24 [31merror[39m: Error: Failed to lookup view "error" in views directory "C:\Users\sch2\Desktop\website_with_stores\views"
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at getStorePage (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:188:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 16:31:25 [31merror[39m: Error: Failed to lookup view "error" in views directory "C:\Users\sch2\Desktop\website_with_stores\views"
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at getStorePage (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:188:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 16:31:26 [31merror[39m: Error: Failed to lookup view "error" in views directory "C:\Users\sch2\Desktop\website_with_stores\views"
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at getStorePage (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:188:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 16:31:29 [31merror[39m: Error: Failed to lookup view "error" in views directory "C:\Users\sch2\Desktop\website_with_stores\views"
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at getStorePage (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:188:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 16:32:36 [31merror[39m: Error: Failed to lookup view "error" in views directory "C:\Users\sch2\Desktop\website_with_stores\views"
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at getStorePage (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:188:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 16:32:45 [31merror[39m: Error: Failed to lookup view "error" in views directory "C:\Users\sch2\Desktop\website_with_stores\views"
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at getStorePage (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:188:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 16:47:46 [31merror[39m: ReferenceError: C:\Users\sch2\Desktop\website_with_stores\views\store.ejs:464
+    462|                                 <div class="product-actions">
+    463|                                     <a class="btn btn-success" style="background:#25D366; color:#fff;" target="_blank"
+ >> 464|                                        href="https://wa.me/<%= store.whatsapp_number %>?text=مرحباً، أود شراء المنتج: <%= encodeURIComponent(product.name) %> بسعر <%= product.price %> ريال من متجرك <%= store.name %> (رابط المنتج: <%= 'http://'+request.headers.host+'/stores/'+store.id %>)">
+    465|                                         <i class="fab fa-whatsapp"></i> شراء الآن
+    466|                                     </a>
+    467|                                 </div>
+
+request is not defined
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store.ejs":97:36)
+    at Array.forEach (<anonymous>)
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store.ejs":60:17)
+    at store (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+2025-06-20 16:47:56 [31merror[39m: ReferenceError: C:\Users\sch2\Desktop\website_with_stores\views\store.ejs:464
+    462|                                 <div class="product-actions">
+    463|                                     <a class="btn btn-success" style="background:#25D366; color:#fff;" target="_blank"
+ >> 464|                                        href="https://wa.me/<%= store.whatsapp_number %>?text=مرحباً، أود شراء المنتج: <%= encodeURIComponent(product.name) %> بسعر <%= product.price %> ريال من متجرك <%= store.name %> (رابط المنتج: <%= 'http://'+request.headers.host+'/stores/'+store.id %>)">
+    465|                                         <i class="fab fa-whatsapp"></i> شراء الآن
+    466|                                     </a>
+    467|                                 </div>
+
+request is not defined
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store.ejs":97:36)
+    at Array.forEach (<anonymous>)
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store.ejs":60:17)
+    at store (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+2025-06-20 17:04:33 [31merror[39m: ReferenceError: C:\Users\sch2\Desktop\website_with_stores\views\store-dashboard.ejs:429
+    427|                                             <small style="color: #666;"><%= product.description.substring(0, 50) %>...</small>
+    428|                                         </td>
+ >> 429|                                         <td><%= product.price %> <%= getCurrencyName(store.currency) %></td>
+    430|                                         <td>
+    431|                                             <span class="product-status <%= product.status === 'active' ? 'status-active' : 'status-inactive' %>">
+    432|                                                 <%= product.status === 'active' ? 'نشط' : 'متوقف' %>
+
+getCurrencyName is not defined
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store-dashboard.ejs":64:7)
+    at Array.forEach (<anonymous>)
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store-dashboard.ejs":39:17)
+    at store-dashboard (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+2025-06-20 17:12:42 [31merror[39m: ReferenceError: C:\Users\sch2\Desktop\website_with_stores\views\store.ejs:540
+    538|                 <p style="color: #666; margin-bottom: 20px; line-height: 1.6;">${product.description}</p>
+    539|                 <div style="font-size: 1.8rem; font-weight: bold; color: #667eea; margin-bottom: 25px;">
+ >> 540|                     ${product.price} <%= getCurrencyName(product.currency || store.currency) %>
+    541|                 </div>
+    542|                 <div style="display: flex; gap: 15px;">
+    543|                     <button class="btn btn-success" style="background:#25D366; color:#fff; flex:1;" target="_blank"
+
+product is not defined
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store.ejs":138:42)
+    at store (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at getStorePage (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:178:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 17:43:38 [31merror[39m: ReferenceError: C:\Users\sch2\Desktop\website_with_stores\views\store.ejs:106
+    104|                 <p class="product-description"><%= product.description %></p>
+    105|                 <div class="product-price">
+ >> 106|                   <i class="fas fa-tag"></i> <%= product.price %> <%= getCurrencyName(product.currency || store.currency) %>
+    107|                 </div>
+    108|                 <div class="product-actions">
+    109|                   <% if (store.whatsapp_number) { %>
+
+getCurrencyName is not defined
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store.ejs":67:7)
+    at Array.forEach (<anonymous>)
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\store.ejs":42:17)
+    at store (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+2025-06-20 18:13:31 [31merror[39m: ReferenceError: C:\Users\sch2\Desktop\website_with_stores\views\stores.ejs:6
+    4|     <meta charset="UTF-8">
+    5|     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ >> 6|     <title><%= store.name %> | اعملها براك</title>
+    7|     <!-- Meta Tags -->
+    8|     <meta name="description" content="<%= store.description || 'متجر ' + store.name + ' على منصة اعملها براك' %>">
+    9|     <meta name="keywords" content="<%= store.name %>, متجر, منتجات, اعملها براك">
+
+store is not defined
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\stores.ejs":12:26)
+    at stores (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at listStores (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:143:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-20 18:19:53 [31merror[39m: ReferenceError: C:\Users\sch2\Desktop\website_with_stores\views\stores.ejs:6
+    4|     <meta charset="UTF-8">
+    5|     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ >> 6|     <title><%= store.name %> | اعملها براك</title>
+    7|     <!-- Meta Tags -->
+    8|     <meta name="description" content="<%= store.description || 'متجر ' + store.name + ' على منصة اعملها براك' %>">
+    9|     <meta name="keywords" content="<%= store.name %>, متجر, منتجات, اعملها براك">
+
+store is not defined
+    at eval ("C:\\Users\\sch2\\Desktop\\website_with_stores\\views\\stores.ejs":12:26)
+    at stores (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\sch2\Desktop\website_with_stores\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\sch2\Desktop\website_with_stores\node_modules\express\lib\response.js:1049:7)
+    at listStores (C:\Users\sch2\Desktop\website_with_stores\controllers\StoreController.js:143:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-22 12:21:31 [31merror[39m: Error: Failed to lookup view "forum" in views directory "C:\Users\sch2\Desktop\coool\views"
+    at Function.render (C:\Users\sch2\Desktop\coool\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\coool\node_modules\express\lib\response.js:1049:7)
+    at getAllPosts (C:\Users\sch2\Desktop\coool\controllers\ForumController.js:319:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-22 12:21:35 [31merror[39m: Error: Failed to lookup view "forum" in views directory "C:\Users\sch2\Desktop\coool\views"
+    at Function.render (C:\Users\sch2\Desktop\coool\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\coool\node_modules\express\lib\response.js:1049:7)
+    at getAllPosts (C:\Users\sch2\Desktop\coool\controllers\ForumController.js:319:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-22 12:21:36 [31merror[39m: Error: Failed to lookup view "forum" in views directory "C:\Users\sch2\Desktop\coool\views"
+    at Function.render (C:\Users\sch2\Desktop\coool\node_modules\express\lib\application.js:597:17)
+    at ServerResponse.render (C:\Users\sch2\Desktop\coool\node_modules\express\lib\response.js:1049:7)
+    at getAllPosts (C:\Users\sch2\Desktop\coool\controllers\ForumController.js:319:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
